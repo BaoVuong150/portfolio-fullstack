@@ -69,9 +69,5 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Increase body size limit to accept image uploads
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
+// App Router: allow up to 30s for large image uploads to Cloudinary
+export const maxDuration = 30
