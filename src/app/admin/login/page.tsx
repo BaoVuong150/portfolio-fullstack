@@ -152,7 +152,10 @@ export default function AdminLoginPage() {
               className="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
-
+        <div>
+          <p>Email: giabao@gmail.com</p>
+          <p>Password: 123456</p>
+        </div>
           {error && (
             <p className="text-sm text-red-500">{error}</p>
           )}
