@@ -131,10 +131,17 @@ export function getAdminFaceCropUrl(url: string | null | undefined): string | nu
 
 /**
  * Returns an auto face-crop Cloudinary URL optimized for Public avatars.
- * Injects: c_thumb,g_face,h_200,w_200,q_auto,f_auto,r_max
+ *
+ * Transform breakdown:
+ *  - c_thumb   : smart thumbnail crop (respects gravity)
+ *  - g_face    : anchor crop to detected face
+ *  - z_0.6     : zoom factor 0.6 = pulls back 40% from face → includes shoulders & background
+ *  - h_400,w_400 : 400×400 output for Retina sharpness (displayed at 200px via CSS)
+ *  - q_auto,f_auto : auto quality + WebP/AVIF format
+ *  - r_max     : full circle crop
  */
 export function getPublicFaceCropUrl(url: string | null | undefined): string | null {
   if (!url) return null
-  return injectCloudinaryTransform(url, 'c_thumb,g_face,h_200,w_200,q_auto,f_auto,r_max')
+  return injectCloudinaryTransform(url, 'c_thumb,g_face,z_0.6,h_400,w_400,q_auto,f_auto,r_max')
 }
 
