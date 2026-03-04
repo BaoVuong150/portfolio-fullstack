@@ -451,15 +451,3 @@ VALUES (
     '2026-02-20 00:00:00+00'
 )
 ON CONFLICT (id) DO NOTHING;
-
-
--- ============================================================
--- END OF FILE
--- ============================================================
--- Ghi chú:
---   - File này là "clean schema" dành cho mục đích tham khảo
---     và portfolio. Không chứa thông tin nhạy cảm.
---   - File backup đầy đủ (bao gồm schema Supabase nội bộ như
---     auth, storage, realtime) được lưu tại: backup_portfolio.sql
---   - Để restore trên Supabase mới: Chạy file này trong SQL Editor.
--- ============================================================
