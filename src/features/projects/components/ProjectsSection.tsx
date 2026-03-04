@@ -62,11 +62,11 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
 
             <div
               ref={scrollRef}
-              className="flex w-full snap-x snap-mandatory scroll-smooth overscroll-x-contain gap-6 overflow-x-auto overflow-y-hidden px-6 pb-12 pt-4 sm:px-8 cursor-grab active:cursor-grabbing touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="flex w-full items-stretch snap-x snap-mandatory scroll-smooth overscroll-x-contain gap-6 overflow-x-auto overflow-y-hidden px-6 pb-12 pt-4 sm:px-8 cursor-grab active:cursor-grabbing touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
               {projects.map((project, i) => (
-                <div key={project.id} className="w-[85vw] flex-shrink-0 snap-center whitespace-normal sm:w-[350px]">
-                  <RevealOnScroll delay={i * 0.08}>
+                <div key={project.id} className="flex h-auto flex-col w-[85vw] flex-shrink-0 snap-center whitespace-normal sm:w-[350px]">
+                  <RevealOnScroll delay={i * 0.08} className="flex flex-1 flex-col">
                     <ProjectCard project={project} />
                   </RevealOnScroll>
                 </div>
