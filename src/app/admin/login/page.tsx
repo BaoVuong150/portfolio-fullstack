@@ -152,10 +152,12 @@ export default function AdminLoginPage() {
               className="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
-        <div>
-          <p>Email: giabao@gmail.com</p>
-          <p>Password: 123456</p>
-        </div>
+          {/* Demo credentials — for recruiter review only */}
+          <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-3 text-xs text-gray-500">
+            <p className="mb-1 font-semibold uppercase tracking-widest text-gray-400">Demo Access</p>
+            <p>Email: <span className="font-mono text-gray-700">giabao@gmail.com</span></p>
+            <p>Password: <span className="font-mono text-gray-700">123456</span></p>
+          </div>
           {error && (
             <p className="text-sm text-red-500">{error}</p>
           )}

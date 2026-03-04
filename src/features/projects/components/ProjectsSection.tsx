@@ -13,8 +13,6 @@ interface ProjectsSectionProps {
 
 export function ProjectsSection({ projects }: ProjectsSectionProps) {
   const { ref: scrollRef, canScrollLeft, canScrollRight, scrollBy } = useDragScroll<HTMLDivElement>()
-  // Self-managed hover state — replaces `group` class to prevent spotlight-glow
-  // leaking into all ProjectCards when the cursor is anywhere in the section.
   const [isScrollerHovered, setIsScrollerHovered] = useState(false)
 
   return (
@@ -40,38 +38,68 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
             onMouseEnter={() => setIsScrollerHovered(true)}
             onMouseLeave={() => setIsScrollerHovered(false)}
           >
-            {/* Navigation Arrows (Desktop Only) */}
+            {/* Navigation Arrows — visible on hover + can scroll, z-30 above masks */}
             <button
-              onClick={() => scrollBy(-350)}
-              className={`absolute left-4 top-1/2 z-20 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white/90 p-2.5 text-black shadow-lg backdrop-blur-sm sm:flex transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95 ${canScrollLeft && isScrollerHovered ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+              onPointerDown={(e) => {
+                // Prevent wrapper onMouseLeave from firing before click registers
+                e.stopPropagation()
+                scrollBy(-370)
+              }}
+              className={[
+                'absolute left-3 top-1/2 z-30 -translate-y-1/2',
+                'hidden sm:flex items-center justify-center',
+                'h-9 w-9 rounded-full bg-white shadow-md ring-1 ring-gray-200',
+                'transition-all duration-200 hover:bg-gray-50 hover:scale-105 active:scale-95',
+                canScrollLeft && isScrollerHovered
+                  ? 'opacity-100 pointer-events-auto'
+                  : 'opacity-0 pointer-events-none',
+              ].join(' ')}
               aria-label="Scroll left"
+              tabIndex={canScrollLeft ? 0 : -1}
             >
-              <ChevronLeft className="h-5 w-5" strokeWidth={2.5} />
+              <ChevronLeft className="h-4 w-4 text-gray-700" strokeWidth={2.5} />
             </button>
+
             <button
-              onClick={() => scrollBy(350)}
-              className={`absolute right-4 top-1/2 z-20 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white/90 p-2.5 text-black shadow-lg backdrop-blur-sm sm:flex transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95 ${canScrollRight && isScrollerHovered ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+              onPointerDown={(e) => {
+                e.stopPropagation()
+                scrollBy(370)
+              }}
+              className={[
+                'absolute right-3 top-1/2 z-30 -translate-y-1/2',
+                'hidden sm:flex items-center justify-center',
+                'h-9 w-9 rounded-full bg-white shadow-md ring-1 ring-gray-200',
+                'transition-all duration-200 hover:bg-gray-50 hover:scale-105 active:scale-95',
+                canScrollRight && isScrollerHovered
+                  ? 'opacity-100 pointer-events-auto'
+                  : 'opacity-0 pointer-events-none',
+              ].join(' ')}
               aria-label="Scroll right"
+              tabIndex={canScrollRight ? 0 : -1}
             >
-              <ChevronRight className="h-5 w-5" strokeWidth={2.5} />
+              <ChevronRight className="h-4 w-4 text-gray-700" strokeWidth={2.5} />
             </button>
 
-            {/* Left/Right fading masks */}
-            <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-8 bg-gradient-to-r from-white to-transparent sm:w-16" />
-            <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-8 bg-gradient-to-l from-white to-transparent sm:w-16" />
+            {/* Edge fade masks — z-10, pointer-events-none so arrows above still clickable */}
+            <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-10 bg-gradient-to-r from-white to-transparent sm:w-16" />
+            <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-10 bg-gradient-to-l from-white to-transparent sm:w-16" />
 
+            {/* Scroll container */}
             <div
               ref={scrollRef}
               className="flex w-full items-stretch snap-x snap-mandatory scroll-smooth overscroll-x-contain gap-6 overflow-x-auto overflow-y-hidden px-6 pb-12 pt-4 sm:px-8 cursor-grab active:cursor-grabbing touch-pan-x [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
               {projects.map((project, i) => (
-                <div key={project.id} className="flex h-auto flex-col w-[85vw] flex-shrink-0 snap-center whitespace-normal sm:w-[350px]">
+                <div
+                  key={project.id}
+                  className="flex h-auto flex-col w-[85vw] flex-shrink-0 snap-center whitespace-normal sm:w-[350px]"
+                >
                   <RevealOnScroll delay={i * 0.08} className="flex flex-1 flex-col">
                     <ProjectCard project={project} />
                   </RevealOnScroll>
                 </div>
               ))}
-              {/* Spacer for last item */}
+              {/* Trailing spacer so last card isn't flush with the right edge */}
               <div className="w-1 shrink-0 px-2 sm:px-4" />
             </div>
           </div>
