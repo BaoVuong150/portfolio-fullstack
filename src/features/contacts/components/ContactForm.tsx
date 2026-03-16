@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, FormEvent, useRef, useEffect } from 'react'
+import { useState, FormEvent, useEffect } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { toast } from 'sonner'
@@ -13,7 +13,6 @@ interface FormState {
 
 type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
 
-// ── Validation helpers ──────────────────────────────────────────────────────
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 function validateForm(form: FormState): string | null {
@@ -24,7 +23,6 @@ function validateForm(form: FormState): string | null {
   if (name.length < 2)
     return 'Name must be at least 2 characters.'
 
-  // ── Email is now REQUIRED ────────────────────────────────────────────────
   if (email.length === 0)
     return 'Invalid email. Please provide a valid email so I can respond!'
 
@@ -37,10 +35,9 @@ function validateForm(form: FormState): string | null {
   if (message.length < 10)
     return `Message is too short — must be at least 10 characters (currently ${message.length}).`
 
-  return null   // all good
+  return null
 }
 
-// ── Derived disabled logic (for the button) ─────────────────────────────────
 function isFormReadyToSubmit(form: FormState): boolean {
   return (
     form.name.trim().length >= 2 &&
@@ -49,7 +46,6 @@ function isFormReadyToSubmit(form: FormState): boolean {
   )
 }
 
-// ── Supabase lazy init ──────────────────────────────────────────────────────
 let supabaseInstance: SupabaseClient | null = null;
 function getSupabase(): SupabaseClient {
   if (!supabaseInstance) {
@@ -67,7 +63,6 @@ export function ContactForm() {
   const [status, setStatus] = useState<SubmitStatus>('idle')
   const [isAdmin, setIsAdmin] = useState(false)
 
-  // ── Detect admin by email ────────────────────────────────────────────────
   const ADMIN_EMAIL = 'giabao@gmail.com'
 
   useEffect(() => {
@@ -85,16 +80,14 @@ export function ContactForm() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    // ── Admin guard — runs before any Supabase call ──────────────────────────
     if (isAdmin) {
       toast.error(
         '⚠️ You are an Admin, please do not send test messages here!',
-        { id: 'admin-block', duration: 5000 }  // deduped — multiple clicks = 1 toast
+        { id: 'admin-block', duration: 5000 }
       )
-      return   // ⛔ Hard stop — supabase.from().insert() is NEVER reached
+      return
     }
 
-    // ── Strict validation ────────────────────────────────────────────────
     const err = validateForm(form)
     if (err) {
       toast.error(err)
@@ -104,7 +97,7 @@ export function ContactForm() {
 
     const payload = {
       name:    form.name.trim(),
-      email:   form.email.trim(),   // always present — email is now required
+      email:   form.email.trim(),
       message: form.message.trim(),
     }
 
@@ -137,23 +130,23 @@ export function ContactForm() {
   const msgLen    = form.message.trim().length
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-8" noValidate>
 
-      {/* Success banner */}
+      {/* Success banner — Swiss style */}
       {status === 'success' && (
-        <div className="flex items-start gap-3 border-l-2 border-black bg-gray-50 px-4 py-3">
-          <span className="mt-px text-black" aria-hidden="true">✓</span>
+        <div className="flex items-start gap-4 border-l-4 border-[#FF3000] bg-[#F2F2F2] px-6 py-4">
+          <span className="mt-0.5 text-sm font-black text-[#FF3000]" aria-hidden="true">✓</span>
           <div>
-            <p className="text-sm font-medium text-black">Message sent</p>
-            <p className="text-xs text-gray-500">I&apos;ll get back to you as soon as possible.</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-black">Message Sent</p>
+            <p className="mt-1 text-xs text-[#999]">I&apos;ll get back to you as soon as possible.</p>
           </div>
         </div>
       )}
 
-      {/* Name — required, min 2 chars */}
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="contact-name" className="text-xs font-semibold uppercase tracking-widest text-gray-400">
-          Name <span className="text-red-400">*</span>
+      {/* Name */}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="contact-name" className="text-xs font-bold uppercase tracking-[0.2em] text-black">
+          Name <span className="text-[#FF3000]">*</span>
         </label>
         <input
           id="contact-name"
@@ -166,21 +159,25 @@ export function ContactForm() {
           onChange={handleChange}
           placeholder="John Doe"
           className={[
-            'rounded-lg border bg-white px-4 py-3 text-sm text-black outline-none transition-all placeholder:text-gray-300 focus:border-black disabled:opacity-50',
+            'border-b-2 bg-transparent px-0 py-3 text-sm font-medium text-black outline-none transition-all duration-150',
+            'placeholder:text-[#CCC] disabled:opacity-50',
+            'focus:border-[#FF3000]',
             status === 'error' && form.name.trim().length < 2
-              ? 'border-red-300'
-              : 'border-gray-200',
+              ? 'border-[#FF3000]'
+              : 'border-black',
           ].join(' ')}
         />
         {form.name.trim().length > 0 && form.name.trim().length < 2 && (
-          <p className="text-xs text-red-400">At least 2 characters required.</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-[#FF3000]">
+            At least 2 characters required.
+          </p>
         )}
       </div>
 
-      {/* Email — now REQUIRED */}
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="contact-email" className="text-xs font-semibold uppercase tracking-widest text-gray-400">
-          Email (Required) <span className="text-red-400">*</span>
+      {/* Email */}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="contact-email" className="text-xs font-bold uppercase tracking-[0.2em] text-black">
+          Email <span className="text-[#FF3000]">*</span>
         </label>
         <input
           id="contact-email"
@@ -192,29 +189,30 @@ export function ContactForm() {
           onChange={handleChange}
           placeholder="you@example.com"
           className={[
-            'rounded-lg border bg-white px-4 py-3 text-sm text-black outline-none transition-all placeholder:text-gray-300 focus:border-black disabled:opacity-50',
+            'border-b-2 bg-transparent px-0 py-3 text-sm font-medium text-black outline-none transition-all duration-150',
+            'placeholder:text-[#CCC] disabled:opacity-50',
+            'focus:border-[#FF3000]',
             status === 'error' && !EMAIL_RE.test(form.email.trim())
-              ? 'border-red-300'
-              : 'border-gray-200',
+              ? 'border-[#FF3000]'
+              : 'border-black',
           ].join(' ')}
         />
-        {/* Inline hint — shown as soon as the user starts typing something invalid */}
         {form.email.trim().length > 0 && !EMAIL_RE.test(form.email.trim()) && (
-          <p className="text-xs text-red-400">
+          <p className="text-xs font-bold uppercase tracking-wider text-[#FF3000]">
             {!form.email.includes('@') ? 'Missing @ character.' : 'Invalid email format.'}
           </p>
         )}
       </div>
 
-      {/* Message — required, min 10 chars */}
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="contact-message" className="text-xs font-semibold uppercase tracking-widest text-gray-400">
-          Message <span className="text-red-400">*</span>
+      {/* Message */}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="contact-message" className="text-xs font-bold uppercase tracking-[0.2em] text-black">
+          Message <span className="text-[#FF3000]">*</span>
         </label>
         <textarea
           id="contact-message"
           name="message"
-          rows={5}
+          rows={6}
           required
           minLength={10}
           disabled={isLoading}
@@ -222,27 +220,30 @@ export function ContactForm() {
           onChange={handleChange}
           placeholder="What would you like to talk about?"
           className={[
-            'resize-none rounded-lg border bg-white px-4 py-3 text-sm text-black outline-none transition-all placeholder:text-gray-300 focus:border-black disabled:opacity-50',
+            'resize-none border-2 bg-transparent p-4 text-sm font-medium text-black outline-none transition-all duration-150',
+            'placeholder:text-[#CCC] disabled:opacity-50',
+            'focus:border-[#FF3000]',
             status === 'error' && msgLen < 10
-              ? 'border-red-300'
-              : 'border-gray-200',
+              ? 'border-[#FF3000]'
+              : 'border-black',
           ].join(' ')}
         />
-        {/* Character counter — turns red below minimum */}
         <div className="flex items-center justify-between">
           {msgLen > 0 && msgLen < 10 && (
-            <p className="text-xs text-red-400">Need {10 - msgLen} more characters.</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#FF3000]">
+              Need {10 - msgLen} more characters.
+            </p>
           )}
           <span className={[
-            'ml-auto text-xs tabular-nums',
-            msgLen > 0 && msgLen < 10 ? 'text-red-400' : 'text-gray-300',
+            'ml-auto text-xs font-bold tabular-nums uppercase tracking-wider',
+            msgLen > 0 && msgLen < 10 ? 'text-[#FF3000]' : 'text-[#CCC]',
           ].join(' ')}>
             {msgLen} / 2000
           </span>
         </div>
       </div>
 
-      {/* Submit — glowing CTA button */}
+      {/* Submit — Swiss CTA */}
       <button
         type="submit"
         disabled={isLoading || !ready}
@@ -254,19 +255,19 @@ export function ContactForm() {
             : undefined
         }
         className={[
-          'send-btn mt-1 inline-flex items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white',
-          'transition-all duration-200 active:scale-95',
+          'mt-2 inline-flex items-center justify-center gap-3 border-2 px-8 py-4 text-xs font-bold uppercase tracking-[0.15em]',
+          'transition-all duration-150',
           isAdmin
-            ? 'opacity-30 cursor-not-allowed'
+            ? 'border-[#CCC] bg-[#F2F2F2] text-[#CCC] cursor-not-allowed'
             : ready && !isLoading
-            ? 'hover:scale-105 hover:shadow-[0_0_20px_4px_rgba(0,200,255,0.45)] shadow-[0_0_12px_2px_rgba(0,200,255,0.25)] animate-glow-pulse'
-            : 'opacity-40 cursor-not-allowed',
+            ? 'border-[#FF3000] bg-[#FF3000] text-white hover:bg-black hover:border-black'
+            : 'border-[#CCC] bg-[#F2F2F2] text-[#CCC] cursor-not-allowed',
         ].join(' ')}
       >
         {isLoading ? (
           <>
             <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
               <circle cx="12" cy="12" r="10" strokeOpacity="0.25" />
               <path d="M12 2a10 10 0 0 1 10 10" />
             </svg>
@@ -277,14 +278,16 @@ export function ContactForm() {
         )}
       </button>
 
-      {/* Admin warning — prominent red caption shown only when logged in as admin */}
+      {/* Admin warning */}
       {isAdmin && (
-        <p className="-mt-2 flex items-center gap-1.5 text-xs font-medium text-red-500">
-          <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <div className="flex items-center gap-3 border-l-4 border-[#FF3000] px-4 py-3">
+          <svg className="h-4 w-4 shrink-0 text-[#FF3000]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fillRule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clipRule="evenodd" />
           </svg>
-          Admin cannot send messages.
-        </p>
+          <span className="text-xs font-bold uppercase tracking-wider text-[#FF3000]">
+            Admin cannot send messages.
+          </span>
+        </div>
       )}
 
     </form>

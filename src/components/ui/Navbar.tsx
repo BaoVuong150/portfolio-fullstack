@@ -2,14 +2,13 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 
 const navLinks = [
-  { href: '#about',    label: 'About'    },
-  { href: '#skills',   label: 'Skills'   },
-  { href: '#projects', label: 'Projects' },
-  { href: '#cv',       label: 'CV'       },
-  { href: '#contact',  label: 'Contact'  },
+  { href: '#about',    label: 'About',    num: '01' },
+  { href: '#skills',   label: 'Skills',   num: '02' },
+  { href: '#projects', label: 'Projects', num: '03' },
+  { href: '#cv',       label: 'CV',       num: '04' },
+  { href: '#contact',  label: 'Contact',  num: '05' },
 ]
 
 const SECTION_IDS = navLinks.map(l => l.href.replace('#', ''))
@@ -20,15 +19,14 @@ function scrollToSection(e: React.MouseEvent<HTMLAnchorElement>, href: string, s
   const el = document.getElementById(id)
   if (!el) return
 
-  // Immediately update active so it doesn't wait for observer
   setActive(id)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const lenis = (window as any).__lenis
   if (lenis) {
     lenis.scrollTo(el, {
-      offset: -56,
-      duration: 1.4,
+      offset: -64,
+      duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     })
   } else {
@@ -41,8 +39,6 @@ export function Navbar() {
 
   useEffect(() => {
     const visible = new Set<string>()
-
-    // ── Intersection Observer ─────────────────────────────────────────────
     const observers: IntersectionObserver[] = []
 
     SECTION_IDS.forEach(id => {
@@ -58,8 +54,7 @@ export function Navbar() {
         const first = SECTION_IDS.find(s => visible.has(s))
         if (first) setActive(first)
       }, {
-        // -20% top clears the navbar; -70% bottom means section must be in top 30% of screen
-        rootMargin: '-56px 0px -70% 0px',
+        rootMargin: '-64px 0px -70% 0px',
         threshold: 0,
       })
 
@@ -67,7 +62,6 @@ export function Navbar() {
       observers.push(obs)
     })
 
-    // ── Bottom-of-page → activate Contact ────────────────────────────────
     function onScroll() {
       const atBottom =
         window.scrollY + window.innerHeight >= document.body.scrollHeight - 40
@@ -82,19 +76,26 @@ export function Navbar() {
   }, [])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100/80 bg-white/90 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-6">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b-4 border-black bg-white">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
 
+        {/* Logo / Name */}
         <Link
           href="/"
-          className="text-sm font-semibold tracking-tight text-black transition-opacity hover:opacity-70"
+          className="group flex items-center gap-3"
         >
-          Portfolio
+          {/* Geometric mark */}
+          <div className="relative flex h-8 w-8 items-center justify-center border-2 border-black transition-colors duration-150 group-hover:bg-[#FF3000] group-hover:border-[#FF3000]">
+            <span className="text-xs font-black text-black transition-colors duration-150 group-hover:text-white">P</span>
+          </div>
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-black">
+            Portfolio
+          </span>
         </Link>
 
         {/* ── Desktop nav ── */}
-        <nav className="hidden items-center gap-6 sm:flex" aria-label="Main navigation">
-          {navLinks.map(({ href, label }) => {
+        <nav className="hidden items-center gap-1 sm:flex" aria-label="Main navigation">
+          {navLinks.map(({ href, label, num }) => {
             const id = href.replace('#', '')
             const isActive = active === id
             return (
@@ -104,29 +105,23 @@ export function Navbar() {
                 onClick={e => scrollToSection(e, href, setActive)}
                 aria-current={isActive ? 'location' : undefined}
                 className={[
-                  'relative pb-0.5 text-sm transition-colors duration-300',
+                  'relative px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] transition-all duration-150',
                   isActive
-                    ? 'font-semibold text-black'
-                    : 'font-normal text-gray-400 hover:text-gray-700',
+                    ? 'bg-black text-white'
+                    : 'text-black hover:bg-[#FF3000] hover:text-white',
                 ].join(' ')}
               >
+                <span className={`mr-1.5 ${isActive ? 'text-[#FF3000]' : 'text-[#999]'} transition-colors duration-150`}>
+                  {num}
+                </span>
                 {label}
-
-                {/* Framer Motion shared underline — slides between links */}
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-underline"
-                    className="absolute -bottom-[18px] left-0 right-0 h-[2.5px] rounded-full bg-black"
-                    transition={{ type: 'spring', stiffness: 380, damping: 38 }}
-                  />
-                )}
               </a>
             )
           })}
         </nav>
 
         {/* ── Mobile nav ── */}
-        <nav className="flex items-center gap-4 sm:hidden" aria-label="Mobile navigation">
+        <nav className="flex items-center gap-0 sm:hidden" aria-label="Mobile navigation">
           {navLinks.map(({ href, label }) => {
             const id = href.replace('#', '')
             const isActive = active === id
@@ -136,8 +131,10 @@ export function Navbar() {
                 href={href}
                 onClick={e => scrollToSection(e, href, setActive)}
                 className={[
-                  'text-xs transition-all duration-300',
-                  isActive ? 'font-semibold text-black' : 'text-gray-400',
+                  'px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all duration-150',
+                  isActive
+                    ? 'bg-black text-white'
+                    : 'text-black',
                 ].join(' ')}
               >
                 {label}

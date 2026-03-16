@@ -1,135 +1,135 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
+/* ══════════════════════════════════════════════════════════════════════════
+   SWISS INTERNATIONAL TYPOGRAPHIC STYLE — Design Tokens
+   ══════════════════════════════════════════════════════════════════════════ */
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  /* ── Core palette ─────────────────────────────────────────────────────── */
+  --color-swiss-bg: #FFFFFF;
+  --color-swiss-fg: #000000;
+  --color-swiss-muted: #F2F2F2;
+  --color-swiss-accent: #FF3000;
+  --color-swiss-border: #000000;
+  --color-swiss-gray: #999999;
+  --color-swiss-gray-light: #CCCCCC;
+
+  /* ── Shadcn compat (override to Swiss palette) ────────────────────────── */
+  --color-background: #FFFFFF;
+  --color-foreground: #000000;
+  --color-primary: #000000;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #F2F2F2;
+  --color-secondary-foreground: #000000;
+  --color-muted: #F2F2F2;
+  --color-muted-foreground: #999999;
+  --color-accent: #FF3000;
+  --color-accent-foreground: #FFFFFF;
+  --color-destructive: #FF3000;
+  --color-border: #000000;
+  --color-input: #000000;
+  --color-ring: #FF3000;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #000000;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #000000;
+
+  /* ── Radius — strictly 0 (Swiss = rectangular) ────────────────────────── */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+
+  /* ── Font ──────────────────────────────────────────────────────────────── */
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-inter);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.13 0.028 261.692);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.13 0.028 261.692);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.13 0.028 261.692);
-  --primary: oklch(0.21 0.034 264.665);
-  --primary-foreground: oklch(0.985 0.002 247.839);
-  --secondary: oklch(0.967 0.003 264.542);
-  --secondary-foreground: oklch(0.21 0.034 264.665);
-  --muted: oklch(0.967 0.003 264.542);
-  --muted-foreground: oklch(0.551 0.027 264.364);
-  --accent: oklch(0.967 0.003 264.542);
-  --accent-foreground: oklch(0.21 0.034 264.665);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.928 0.006 264.531);
-  --input: oklch(0.928 0.006 264.531);
-  --ring: oklch(0.707 0.022 261.325);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0.002 247.839);
-  --sidebar-foreground: oklch(0.13 0.028 261.692);
-  --sidebar-primary: oklch(0.21 0.034 264.665);
-  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.967 0.003 264.542);
-  --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
-  --sidebar-border: oklch(0.928 0.006 264.531);
-  --sidebar-ring: oklch(0.707 0.022 261.325);
+  --radius: 0px;
 }
 
-.dark {
-  --background: oklch(0.13 0.028 261.692);
-  --foreground: oklch(0.985 0.002 247.839);
-  --card: oklch(0.21 0.034 264.665);
-  --card-foreground: oklch(0.985 0.002 247.839);
-  --popover: oklch(0.21 0.034 264.665);
-  --popover-foreground: oklch(0.985 0.002 247.839);
-  --primary: oklch(0.928 0.006 264.531);
-  --primary-foreground: oklch(0.21 0.034 264.665);
-  --secondary: oklch(0.278 0.033 256.848);
-  --secondary-foreground: oklch(0.985 0.002 247.839);
-  --muted: oklch(0.278 0.033 256.848);
-  --muted-foreground: oklch(0.707 0.022 261.325);
-  --accent: oklch(0.278 0.033 256.848);
-  --accent-foreground: oklch(0.985 0.002 247.839);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.034 264.665);
-  --sidebar-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.278 0.033 256.848);
-  --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
-}
+/* ══════════════════════════════════════════════════════════════════════════
+   BASE LAYER
+   ══════════════════════════════════════════════════════════════════════════ */
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-    @apply border-border outline-ring/50;
+    @apply border-swiss-border/10;
   }
+
   body {
-    @apply bg-background text-foreground;
-    @apply bg-background text-foreground;
+    @apply bg-swiss-bg text-swiss-fg antialiased;
+    font-feature-settings: "ss01", "ss02", "cv01";
+  }
+
+  /* Enforce 0 radius on everything */
+  *,
+  *::before,
+  *::after {
+    border-radius: 0 !important;
   }
 }
 
-/* ── Global interaction polish ─────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════════
+   SWISS TEXTURE PATTERNS
+   These CSS-generated patterns add depth without shadows or gradients.
+   ══════════════════════════════════════════════════════════════════════════ */
 
-/* Pointer cursor on all interactive elements */
+/* Grid Pattern — 24×24px, 3% opacity */
+.swiss-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Dot Matrix — radial gradient dots, 16×16px, 4% opacity */
+.swiss-dots {
+  background-image: radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Diagonal Lines — 45°, 10px spacing, 2% opacity */
+.swiss-diagonal {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 9px,
+    rgba(0,0,0,0.02) 9px,
+    rgba(0,0,0,0.02) 10px
+  );
+}
+
+/* Noise Texture — SVG fractal noise, 1.5% opacity */
+.swiss-noise {
+  position: relative;
+}
+.swiss-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.015;
+  mix-blend-mode: overlay;
+  z-index: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SWISS INTERACTION PATTERNS
+   Precise, mechanical, snappy. No elastic or spring animations.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Pointer cursor on interactive elements */
 button,
 a,
 input[type="checkbox"],
@@ -140,84 +140,116 @@ label[for],
   cursor: pointer !important;
 }
 
-/* Physical press feedback — scale down slightly on click */
+/* Physical press — scale down on click */
 button:not(:disabled):active {
-  transform: scale(0.96);
-  transition: transform 0.1s ease;
+  transform: scale(0.97);
+  transition: transform 0.1s ease-out;
 }
 
-/* Smooth default transition for transform-capable elements */
+/* Smooth, fast default transition */
 button {
-  transition: opacity 0.15s ease, transform 0.1s ease, background-color 0.15s ease;
+  transition: background-color 0.15s ease-out, color 0.15s ease-out, border-color 0.15s ease-out, transform 0.1s ease-out;
 }
 
-/* ── Spotlight card ─────────────────────────────────────────────────────── */
-
-.spotlight-card .spotlight-glow {
-  background: radial-gradient(
-    220px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(0, 0, 0, 0.06) 0%,
-    transparent 70%
-  );
-  opacity: 0;
-  transition: opacity 0.35s ease;
+/* ── Swiss section divider ──────────────────────────────────────────────── */
+.swiss-section-border {
+  border-top: 4px solid #000000;
 }
 
-.spotlight-card:hover .spotlight-glow {
-  opacity: 1;
+/* ── Swiss section number ───────────────────────────────────────────────── */
+.swiss-section-number {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #FF3000;
 }
 
-/* ── Animated blob background ───────────────────────────────────────────── */
+/* ── Swiss heading (massive uppercase) ──────────────────────────────────── */
+.swiss-heading {
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
 
-@keyframes blob {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+/* ── Navigation link hover animation ────────────────────────────────────── */
+.swiss-nav-link {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  flex-direction: column;
+  height: 1.2em;
+}
+
+.swiss-nav-link span {
+  display: block;
+  transition: transform 0.2s ease-out;
+}
+
+.swiss-nav-link:hover span:first-child {
+  transform: translateY(-100%);
+}
+
+.swiss-nav-link:hover span:last-child {
+  transform: translateY(-100%);
+}
+
+/* ── Geometric composition shapes ───────────────────────────────────────── */
+.swiss-circle {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50% !important;
+  border: 4px solid #000000;
+}
+
+.swiss-circle-accent {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50% !important;
+  background-color: #FF3000;
+}
+
+.swiss-cross {
+  position: relative;
+}
+.swiss-cross::before,
+.swiss-cross::after {
+  content: '';
+  position: absolute;
+  background: #000000;
+}
+.swiss-cross::before {
+  top: 50%;
+  left: 10%;
+  width: 80%;
+  height: 4px;
+  transform: translateY(-50%);
+}
+.swiss-cross::after {
+  top: 10%;
+  left: 50%;
+  width: 4px;
+  height: 80%;
+  transform: translateX(-50%);
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
-  25% {
-    transform: translate(3%, 4%) scale(1.05);
-    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-  }
-  50% {
-    transform: translate(-2%, 3%) scale(0.97);
-    border-radius: 50% 40% 60% 30% / 40% 50% 60% 50%;
-  }
-  75% {
-    transform: translate(2%, -3%) scale(1.03);
-    border-radius: 40% 60% 40% 60% / 60% 40% 60% 40%;
-  }
 }
 
-.animate-blob {
-  animation: blob 14s ease-in-out infinite;
+/* ── Scrollbar hide for carousels ───────────────────────────────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
-/* Staggered start times for each blob */
-.animation-delay-2000 { animation-delay: 2s; }
-.animation-delay-4000 { animation-delay: 4s; }
-.animation-delay-6000 { animation-delay: 6s; }
-
-
-/* ── Grain noise texture ─────────────────────────────────────────────────── */
-/*
-  Uses an inline SVG feTurbulence filter to generate film-grain noise.
-  No external image required. Opacity 0.025 = barely visible, just enough
-  to remove the flat "digital" feel from solid colours.
-*/
-.noise {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 200px 200px;
-  opacity: 0.025;
-  mix-blend-mode: overlay;
-}
-
-/* ── Send button glow pulse ──────────────────────────────────────────────── */
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 12px 2px rgba(0, 200, 255, 0.25); }
-  50%       { box-shadow: 0 0 22px 6px rgba(0, 200, 255, 0.55); }
-}
-
-.animate-glow-pulse {
-  animation: glow-pulse 2s ease-in-out infinite;
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

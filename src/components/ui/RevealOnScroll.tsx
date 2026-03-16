@@ -7,15 +7,19 @@ interface RevealOnScrollProps {
   children: ReactNode
   /** Stagger delay in seconds (default 0) */
   delay?: number
-  /** y offset to start from in px (default 32) */
+  /** y offset to start from in px (default 24) */
   y?: number
   className?: string
 }
 
+/**
+ * Swiss-style reveal: snappy, mechanical, precise.
+ * Uses ease-out with short duration — no elastic/spring.
+ */
 export function RevealOnScroll({
   children,
   delay = 0,
-  y = 32,
+  y = 24,
   className,
 }: RevealOnScrollProps) {
   return (
@@ -23,11 +27,11 @@ export function RevealOnScroll({
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
+      viewport={{ once: true, margin: '-80px' }}
       transition={{
-        duration: 0.55,
+        duration: 0.35,
         delay,
-        ease: [0.21, 0.47, 0.32, 0.98], // custom cubic — fast start, gentle end
+        ease: [0.33, 0, 0, 1], // fast-out, instant feel
       }}
     >
       {children}
